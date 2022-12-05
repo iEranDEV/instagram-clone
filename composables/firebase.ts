@@ -21,18 +21,24 @@ const app = initializeApp(firebaseConfig);
 
 export const auth = getAuth(app);
 
+// Create new user with email and password
 export const createUser = async (email: string, password: string) => {
     return createUserWithEmailAndPassword(auth, email, password).then((userCredentials) => {
         const user = userCredentials.user;
+        useState('user', () => user);
+        navigateTo('/');
         return user;
     }).catch((error) => {
         return error;
     });
 }
 
+// Login existing user with email and password
 export const loginUser = async (email: string, password: string) => {
     return signInWithEmailAndPassword(auth, email, password).then((userCredentials) => {
         const user = userCredentials.user;
+        useState('user', () => user);
+        navigateTo('/');
         return user;
     }).catch((error) => {
         return error;

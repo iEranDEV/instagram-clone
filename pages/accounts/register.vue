@@ -4,7 +4,7 @@
 		<img src="~/assets/instagram_logo.png" alt="Logo" class="w-52">
 
 		<!-- Login form -->
-		<form @submit.prevent="register()" class="w-full flex flex-col gap-4">
+		<form @submit.prevent="register()" class="w-full flex flex-col gap-4 md:items-center">
 			
 			<!-- Email input -->
 			<input type="email" v-model="email" placeholder="Email address" class="p-2 rounded-lg w-full md:w-96">
@@ -16,10 +16,10 @@
 			<input type="password" v-model="password" placeholder="Password" class="p-2 rounded-lg w-full md:w-96">
 
 			<!-- Log in button -->
-			<button type="submit" class="p-2 rounded-lg bg-sky-500 text-stone-100 font-semibold">Sign up</button>
+			<button type="submit" class="p-2 rounded-lg bg-sky-500 text-stone-100 font-semibold md:w-96">Sign up</button>
 
 			<!-- Error message box -->
-			<p v-if="error" class="w-full rounded-xl border-2 border-red-600 bg-red-200 px-4 py-2 text-red-600 font-semibold">
+			<p v-if="error" class="w-full rounded-xl border-2 border-red-500 bg-red-200 px-4 py-2 text-red-500 font-semibold md:w-96 text-sm">
 				{{ error }}
 			</p>
 
@@ -38,7 +38,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { createUser } from '~~/composables/firebase';
+import { createUser } from '~/composables/firebase';
 
 export default defineComponent({
 	setup() {
@@ -49,13 +49,13 @@ export default defineComponent({
 		const email = ref('');
 		const username = ref('');
 		const password = ref('');
-		const error = ref(null);
+		const error = ref('');
 
 		return {
 			email,
 			username,
 			password,
-			error
+			error,
 		}
 	},
 	methods: {
@@ -65,7 +65,23 @@ export default defineComponent({
 			
 			// Check if returned data is error
 			if(data.code != null) {
-				this.error = data.code;
+
+				// Handle and set error message according to error code
+				switch(data.code) {
+					case 'auth/invalid-email':
+						this.error = 'Invalid email!';
+						break;
+					case 'auth/internal-error':
+						this.error = 'A problem occured! Please refresh the page and try again.';
+						break;
+					case 'auth/weak-password':
+						this.error = 'Your password is too weak, try a stronger one.';
+						break;
+					case 'auth/email-already-in-use':
+						this.error = 'This email is already in use. If it belongs to you, try logging in.';
+						break;
+				}
+
 			}
 		}
 	}
