@@ -1,7 +1,10 @@
 <template>
 	<NuxtLink :to="route" class="w-full">
-        <div class="py-2 w-full bg-white hover:bg-stone-100 px-3">
-            <slot />
+        <div class="bg-white flex justify-center items-center py-4">
+            <slot name="icon" />
+            <p class="hidden md:block">
+                <slot name="name" />
+            </p>
         </div>
     </NuxtLink>	
 </template>
