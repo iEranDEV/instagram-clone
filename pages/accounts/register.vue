@@ -4,7 +4,7 @@
 		<img src="~/assets/instagram_logo.png" alt="Logo" class="w-52">
 
 		<!-- Login form -->
-		<form @submit.prevent="register()" class="w-full flex flex-col gap-4 md:items-center">
+		<form @submit.prevent="register()" class="w-full flex flex-col gap-4">
 			
 			<!-- Email input -->
 			<input type="email" v-model="email" placeholder="Email address" class="p-2 rounded-lg w-full md:w-96">
@@ -24,7 +24,7 @@
 			</p>
 
 			<!-- Important links -->
-			<div class="flex flex-col gap-2 mt-16 mb-4">
+			<div class="flex flex-col gap-2 mt-16 mb-4 md:text-sm">
 				<p class="text-stone-400">By signing up, you agree to our <a href="#" class="underline">Terms</a>.</p>
 				<p class="text-stone-400">
 					Don't have an account? 

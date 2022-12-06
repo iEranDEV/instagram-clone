@@ -3,5 +3,5 @@
 @tailwind utilities;
 
 * {
-    @apply text-stone-700;
+    @apply text-stone-700 bg-stone-100; 
 }

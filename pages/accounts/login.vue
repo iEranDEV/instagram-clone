@@ -21,7 +21,7 @@
 			</p>
 
 			<!-- Important links -->
-			<div class="flex flex-col gap-2 mt-16 mb-4">
+			<div class="flex flex-col gap-2 mt-16 mb-4 md:text-sm">
 				<a href="#" class="text-sky-500 font-semibold">Forgotten your password?</a>
 				<p class="text-stone-400">
 					Don't have an account? 

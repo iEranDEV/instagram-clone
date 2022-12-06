@@ -6,12 +6,7 @@
     </div>
 </template>
 
-<script setup>
-// Setup page layout
-definePageMeta({
-    layout: "custom",
-})
-</script>
+
 
 <style>
 
