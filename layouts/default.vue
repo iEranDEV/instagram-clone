@@ -1,5 +1,5 @@
 <template>
-	<div class="min-h-screen flex flex-col-reverse justify-between">
+	<div class="min-h-screen flex flex-col-reverse justify-between md:flex-row">
 
 		<!-- Navbar -->
 		<nav class="bg-white w-full flex justify-around border-t-2 border-stone-200">
