@@ -2,6 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-* {
+body {
     @apply text-stone-700 bg-stone-100; 
 }
