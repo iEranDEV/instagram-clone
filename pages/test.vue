@@ -1,7 +1,7 @@
 <template>
     <div class="w-full">
         <p>
-            DAOFAUFG
+            {{ useRoute() }}
         </p>
     </div>
 </template>
