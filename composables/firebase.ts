@@ -2,6 +2,9 @@ import {
     getAuth, 
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
+    updateProfile,
+    reauthenticateWithCredential,
+    EmailAuthProvider
 } from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
 
@@ -21,12 +24,28 @@ const app = initializeApp(firebaseConfig);
 
 export const auth = getAuth(app);
 
+
 // Create new user with email and password
-export const createUser = async (email: string, password: string) => {
+export const createUser = async (email: string, password: string, username: string) => {
     return createUserWithEmailAndPassword(auth, email, password).then((userCredentials) => {
         const user = userCredentials.user;
-        useState('user', () => user);
-        navigateTo('/');
+
+        // Setting custom data for recently created user
+        updateProfile(user, {
+            displayName: username,
+            photoURL: 'https://i.pinimg.com/736x/d1/51/62/d15162b27cd9712860b90abe58cb60e7.jpg'
+        }).then(() => {
+            let credentials = EmailAuthProvider.credential(email, password);
+            reauthenticateWithCredential(user, credentials).then((updatedUser) => {
+                useState('user', () => updatedUser.user);
+                navigateTo('/test');
+            }).catch((error) => {
+                return error
+            });
+        }).catch((error) => {
+            return error;
+        }) 
+
         return user;
     }).catch((error) => {
         return error;
@@ -38,7 +57,7 @@ export const loginUser = async (email: string, password: string) => {
     return signInWithEmailAndPassword(auth, email, password).then((userCredentials) => {
         const user = userCredentials.user;
         useState('user', () => user);
-        navigateTo('/');
+        navigateTo('/test');
         return user;
     }).catch((error) => {
         return error;

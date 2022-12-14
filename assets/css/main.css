@@ -9,3 +9,7 @@ body {
 .active-navbar-item {
     @apply border-t-2 md:border-t-0 md:border-r-4 border-sky-500 text-sky-500 md:text-current bg-stone-50 font-semibold;
 }
+
+.page {
+    @apply pb-24 md:pb-0 md:ml-52 min-h-screen;
+}

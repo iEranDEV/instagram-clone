@@ -61,7 +61,7 @@ export default defineComponent({
 	methods: {
 		async register() {
 			// Get data from response
-			let data = await createUser(this.email, this.password);
+			let data = await createUser(this.email, this.password, this.username);
 			
 			// Check if returned data is error
 			if(data.code != null) {
