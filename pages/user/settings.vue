@@ -1,10 +1,10 @@
 <template>
     <div class="page w-full h-screen md:px-32 md:py-16">
 
-        <div class="w-full h-screen md:h-full md:rounded-lg py-6 md:bg-white md:flex">
+        <div class="w-full h-screen md:h-full md:rounded-lg py-6 bg-white md:flex">
 
             <!-- Menu -->
-            <div class="bg-white p-6 md:py-0 md:w-60 absolute -top-96 w-full md:h-full md:w-max transition-all md:top-0 left-0 md:static rounded-b-lg border-b-2 md:border-r-2 md:border-b-0 border-gray-200 flex flex-col gap-3 md:gap-6" :class="{activeMenu: menu}">
+            <div class="bg-white p-6 md:px-0 md:py-0 absolute -top-96 w-full md:h-full md:w-72 transition-all md:top-0 left-0 md:static rounded-b-lg border-b-2 md:border-r-2 md:border-b-0 border-gray-200 flex flex-col gap-3 md:gap-0" :class="{activeMenu: menu}">
                 <!-- Menu close -->
                 <div class="flex justify-end">
                     <svg @click="toggleMenu()" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7 md:hidden">
@@ -13,11 +13,11 @@
                 </div>
 
                 <!-- Items -->
-                <div class="cursor-pointer " :class="{ 'font-semibold': page == 'edit_profile'}" @click="togglePage('edit_profile')">Edit profile</div>
-                <div class="cursor-pointer" :class="{ 'font-semibold': page == 'change_password'}" @click="togglePage('change_password')">Change password</div>
-                <div class="cursor-pointer" :class="{ 'font-semibold': page == 'email_notifications'}" @click="togglePage('email_notifications')">E-mail notifications</div>
-                <div>Help center</div>
-                <div class="text-red-500 font-semibold">Log out</div>
+                <div class="cursor-pointer md:p-2 md:px-4 md:border-r-2 md:border-white md:hover:border-stone-200 md:hover:bg-stone-50" :class="{ 'font-semibold md:border-sky-500': page == 'edit_profile'}" @click="togglePage('edit_profile')">Edit profile</div>
+                <div class="cursor-pointer md:p-2 md:px-4 md:border-r-2 md:border-white md:hover:border-stone-200 md:hover:bg-stone-50" :class="{ 'font-semibold md:border-sky-500': page == 'change_password'}" @click="togglePage('change_password')">Change password</div>
+                <div class="cursor-pointer md:p-2 md:px-4 md:border-r-2 md:border-white md:hover:border-stone-200 md:hover:bg-stone-50" :class="{ 'font-semibold md:border-sky-500': page == 'email_notifications'}" @click="togglePage('email_notifications')">E-mail notifications</div>
+                <div class="cursor-pointer md:p-2 md:px-4 md:border-r-2 md:border-white md:hover:border-stone-200 md:hover:bg-stone-50">Help center</div>
+                <div class="text-red-500 cursor-pointer md:p-2 md:px-4 md:border-r-2 md:border-white md:hover:border-stone-200 md:hover:bg-stone-50">Log out</div>
             </div>
 
             <!-- Menu toggler -->

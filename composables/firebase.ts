@@ -40,7 +40,8 @@ export const createUser = async (email: string, password: string, displayName: s
             emailVerified: user_data.emailVerified,
             phoneNumber: user_data.phoneNumber,
             createdAt: user_data.metadata.creationTime,
-            photoURL: 'https://kis.agh.edu.pl/wp-content/uploads/2021/01/default-avatar.jpg'
+            photoURL: 'https://kis.agh.edu.pl/wp-content/uploads/2021/01/default-avatar.jpg',
+            bio: ''
         }
 
         try {

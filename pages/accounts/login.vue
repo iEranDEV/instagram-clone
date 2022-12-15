@@ -7,13 +7,13 @@
 		<form @submit.prevent="login()" class="w-full flex flex-col gap-4">
 			
 			<!-- Email input -->
-			<input type="email" v-model="email" placeholder="Email address" class="p-2 rounded-lg w-full md:w-96">
+			<input type="email" v-model="email" placeholder="Email address" class="form-input md:w-96">
 
 			<!-- Password input -->
-			<input type="password" v-model="password" placeholder="Password" class="p-2 rounded-lg w-full md:w-96">
+			<input type="password" v-model="password" placeholder="Password" class="form-input md:w-96">
 
 			<!-- Log in button -->
-			<button type="submit"  class="p-2 rounded-lg bg-sky-500 text-stone-100 font-semibold">Log in</button>
+			<button type="submit"  class="btn bg-sky-500">Log in</button>
 
 			<!-- Error message box -->
 			<p v-if="error" class="w-full rounded-xl border-2 border-red-500 bg-red-200 px-4 py-2 text-red-500 font-semibold md:w-96 text-sm">
