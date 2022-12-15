@@ -8,7 +8,7 @@ import {
 } from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from "firebase/firestore";
-import { doc, setDoc } from 'firebase/firestore';
+import { doc, setDoc, getDoc } from 'firebase/firestore';
 
 // Define firebase configuration
 const firebaseConfig = {
@@ -30,17 +30,18 @@ export const db = getFirestore(app);
 
 
 // Create new user with email and password
-export const createUser = async (email: string, password: string, displayName: string) => {
+export const createUser: any = async (email: string, password: string, displayName: string, fullName: string) => {
     return createUserWithEmailAndPassword(auth, email, password).then(async (userCredentials) => {
         const user_data = userCredentials.user;
         const user = {
             uid: user_data.uid,
             displayName: displayName,
+            fullName: fullName,
             email: user_data.email,
             emailVerified: user_data.emailVerified,
             phoneNumber: user_data.phoneNumber,
             createdAt: user_data.metadata.creationTime,
-            photoURL: 'https://kis.agh.edu.pl/wp-content/uploads/2021/01/default-avatar.jpg',
+            photoURL: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/340px-Default_pfp.svg.png',
             bio: ''
         }
 
@@ -61,11 +62,16 @@ export const createUser = async (email: string, password: string, displayName: s
 
 // Login existing user with email and password
 export const loginUser = async (email: string, password: string) => {
-    return signInWithEmailAndPassword(auth, email, password).then((userCredentials) => {
-        const user = userCredentials.user;
-        useState('user', () => user);
-        navigateTo('/test');
-        return user;
+    return signInWithEmailAndPassword(auth, email, password).then(async (userCredentials) => {
+        const user_data = userCredentials.user;
+        const userSnap = await getDoc(doc(db, "users", user_data.uid));
+        if(userSnap.exists()) {
+            const user = userSnap.data();
+            console.log(user);
+            useState('user', () => user);
+            navigateTo('/test');
+            return user;
+        }
     }).catch((error) => {
         return error;
     })

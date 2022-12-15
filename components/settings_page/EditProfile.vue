@@ -12,34 +12,40 @@
             </div>
 
             <!-- Username -->
-            <div>
+            <div class="max-w-md">
                 <label for="username" class="font-semibold">Username</label>
                 <input type="text" id="username" name="username" placeholder="Username" class="form-input bg-stone-100 my-1">
                 <p class="text-stone-400 text-sm">
-                    Your username is displayed on your profile and helps your friends find you. It is not used for logging in.
+                    Your username is displayed on your profile and helps your friends find you. It is not used for logging in
                 </p>
             </div>
 
+            <!-- Full name -->
+            <div class="max-w-md">
+                <label for="fullname" class="font-semibold">Full name</label>
+                <input type="text" id="fullname" name="fullname" placeholder="Full name" class="form-input bg-stone-100 my-1">
+            </div>
+
             <!-- BIO -->
-            <div>
+            <div class="max-w-md">
                 <label for="bio" class="font-semibold">Bio</label>
-                <textarea name="bio" id="bio" cols="30" rows="3" class="form-input bg-stone-100 my-1" placeholder="Something cool B)"></textarea>
+                <textarea name="bio" id="bio" cols="30" rows="3" class="form-input bg-stone-100 my-1" placeholder="Something cool B)" maxlength="200"></textarea>
                 <p class="text-stone-400 text-sm">
                     0/200
                 </p>
             </div>
 
             <!-- Email -->
-            <div>
+            <div class="max-w-md">
                 <label for="email" class="font-semibold">Email</label>
                 <input type="email" id="email" name="email" placeholder="Email" class="form-input bg-stone-100 my-1">
                 <p class="text-stone-400 text-sm">
-                    The e-mail address is used to log in to the website. Remember to confirm the new address after changing it.
+                    The e-mail address is used to log in to the website. Remember to confirm the new address after changing it
                 </p>
             </div>
 
             <!-- Phone number -->
-            <div>
+            <div class="max-w-md">
                 <label for="phone" class="font-semibold">Phone number</label>
                 <input type="tel" id="phone" name="phone" placeholder="Phone numer" class="form-input bg-stone-100 my-1">
             </div>

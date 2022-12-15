@@ -1,7 +1,7 @@
 <template>
     <div class="w-full page" id="test">
         <p>
-            {{ useRoute() }}
+            Home page
         </p>
     </div>
 </template>

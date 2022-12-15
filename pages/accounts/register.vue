@@ -12,6 +12,9 @@
             <!-- Username input -->
 			<input type="text" v-model="username" placeholder="Username" class="form-input md:w-96">
 
+			<!-- Full name input -->
+			<input type="text" v-model="fullname" placeholder="Full name" class="form-input md:w-96">
+
 			<!-- Password input -->
 			<input type="password" v-model="password" placeholder="Password" class="form-input md:w-96">
 
@@ -50,18 +53,20 @@ export default defineComponent({
 		const username = ref('');
 		const password = ref('');
 		const error = ref('');
+		const fullname = ref('');
 
 		return {
 			email,
 			username,
 			password,
 			error,
+			fullname
 		}
 	},
 	methods: {
 		async register() {
 			// Get data from response
-			let data = await createUser(this.email, this.password, this.username);
+			let data = await createUser(this.email, this.password, this.username, this.fullname);
 			
 			// Check if returned data is error
 			if(data.code != null) {

@@ -22,6 +22,10 @@ body {
     @apply text-stone-100 font-semibold p-2 rounded-lg;
 }
 
+.settings-item {
+    @apply cursor-pointer flex gap-2 items-center md:p-2 md:px-4 md:border-r-2 md:border-white md:hover:border-stone-200 md:hover:bg-stone-50;
+}
+
 ::-webkit-scrollbar {
     width: 5px;
 }
