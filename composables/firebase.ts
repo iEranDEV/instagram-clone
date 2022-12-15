@@ -2,9 +2,7 @@ import {
     getAuth, 
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
-    updateProfile,
-    reauthenticateWithCredential,
-    EmailAuthProvider
+    updateEmail
 } from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from "firebase/firestore";
@@ -39,7 +37,6 @@ export const createUser: any = async (email: string, password: string, displayNa
             fullName: fullName,
             email: user_data.email,
             emailVerified: user_data.emailVerified,
-            phoneNumber: user_data.phoneNumber,
             createdAt: user_data.metadata.creationTime,
             photoURL: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/340px-Default_pfp.svg.png',
             bio: ''
@@ -67,7 +64,6 @@ export const loginUser = async (email: string, password: string) => {
         const userSnap = await getDoc(doc(db, "users", user_data.uid));
         if(userSnap.exists()) {
             const user = userSnap.data();
-            console.log(user);
             useState('user', () => user);
             navigateTo('/test');
             return user;
@@ -75,4 +71,22 @@ export const loginUser = async (email: string, password: string) => {
     }).catch((error) => {
         return error;
     })
+}
+
+// Update user
+export const updateUser = async (user: any) => {
+    const snap_old = await getDoc(doc(db, "users", user.uid));
+    if(snap_old.exists()) {
+        const user_old = snap_old.data();
+        if(user_old.email != user.email && auth.currentUser) {
+            await updateEmail(auth.currentUser, user.email).catch((error) => {
+                return error;
+            })
+        }
+        setDoc(doc(db, "users", user.uid), user).then(() => {
+            return user;
+        }).catch((error) => {
+            return error;
+        })
+    }
 }

@@ -33,3 +33,7 @@ body {
 ::-webkit-scrollbar-thumb {
     @apply bg-stone-200 rounded-full hover:bg-stone-300;
 }
+
+::-webkit-file-upload-button {
+    display: none;
+  }

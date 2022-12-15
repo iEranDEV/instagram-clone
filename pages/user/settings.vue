@@ -75,7 +75,7 @@ export default defineComponent({
 
         return {
             menu,
-            page
+            page,
         }
     },
     methods: {
