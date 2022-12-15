@@ -1,5 +1,5 @@
 <template>
-	<div class="min-h-screen w-screen flex flex-col justify-between md:justify-start md:flex-row">
+	<div class="flex flex-col justify-between md:justify-start md:flex-row">
 
 		<!-- Navbar -->
 		<nav class="bg-white w-full md:h-screen md:w-52 flex justify-center md:justify-around md:items-center md:flex-col fixed bottom-0 ">
