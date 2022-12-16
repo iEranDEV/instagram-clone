@@ -2,11 +2,14 @@ import {
     getAuth, 
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
-    updateEmail
+    updateEmail,
+    updatePassword,
+    User
 } from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from "firebase/firestore";
 import { doc, setDoc, getDoc } from 'firebase/firestore';
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 // Define firebase configuration
 const firebaseConfig = {
@@ -25,6 +28,8 @@ const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 
 export const db = getFirestore(app);
+
+export const storage = getStorage(app);
 
 
 // Create new user with email and password
@@ -89,4 +94,16 @@ export const updateUser = async (user: any) => {
             return error;
         })
     }
+}
+
+// Upload photo to storage
+export const uploadPhoto = async (file: File) => {
+    return uploadBytes(ref(storage, file.name), file).then(async (snapshot) => {
+        return getDownloadURL(snapshot.ref).then((downloadURL) => {
+            return downloadURL;
+        })
+    }).catch((error) => {
+        console.log(error);
+        return error;
+    })
 }

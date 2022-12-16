@@ -3,11 +3,14 @@
             <form class="h-full w-full flex flex-col gap-8" @submit.prevent="updateProfile()">
                 <!-- User avatar -->
                 <div class="flex">
-                    <img :src="user.photoURL" alt="Avatar" class="w-16 rounded-full">
+                    <img :src="user.photoURL" alt="Avatar" class="w-16 h-16 rounded-full">
                     <input @change="submitPhoto" id="avatar_input" ref="avatar_input" type="file" name="image" accept="image/png, image/jpeg" style="display: none;">
                     <div class="flex flex-col h-full justify-center pl-5">
                         <p @click="$refs.avatar_input.click()" class="text-sky-500 font-semibold hover:cursor-pointer">Change your profile photo</p>
                         <p class="text-stone-400 text-sm">The recommended photo size is 512x512</p>
+                        <p class="text-stone-400 text-sm">Chosen photo:</p>
+                        <span v-if="file" class="text-stone-400 text-sm underline">{{ file.name }}</span>
+                        <span v-else class="text-stone-400 text-sm underline">None</span>
                     </div>
                 </div>
 
@@ -51,28 +54,36 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { updateUser } from '~/composables/firebase';
+import { updateUser, uploadPhoto } from '~/composables/firebase';
 
 export default defineComponent({
     setup() {
-        const user = useState('user').value;
+        const user = useState('user').value as any;
 
         return {
             user,
         }
     },
+    data() {
+        return {
+            file: {},
+        }
+    },
     methods: {
         async updateProfile() {
-            await updateUser(this.user);
+            if(this.file instanceof File) {
+                uploadPhoto(this.file).then(async (downloadURL) => {
+                    if(downloadURL) this.user.photoURL = downloadURL;
+                    await updateUser(this.user);
+                });
+            } else {
+                await updateUser(this.user);
+            }
         },
         submitPhoto(event: Event) {
-            let reader = new FileReader();
             const target = event.target as HTMLInputElement;
-            reader.onloadend = () => {
-                console.log(reader.result);
-            }
             if(target && target.files) {
-                reader.readAsDataURL(target.files[0]);
+                this.file = target.files[0];
             }
         }
     }
