@@ -2,12 +2,15 @@
 	<div class="flex flex-col justify-between md:justify-start md:flex-row">
 
 		<!-- Navbar -->
-		<nav class="bg-white w-full md:h-screen md:w-52 border-t-2 border-stone-200 md:border-t-0 flex justify-center md:justify-around md:items-center md:flex-col fixed bottom-0 ">
+		<nav class="bg-white w-full md:h-screen md:w-20 lg:w-52 border-t-2 border-stone-200 md:border-t-0 flex justify-center md:justify-around md:items-center md:flex-col fixed bottom-0 ">
 			<!-- Logo -->
-			<img src="~/assets/instagram_logo.png" alt="Logo" class="w-32 hidden md:block">
+			<div class="flex justify-center items-center">
+				<img src="~/assets/instagram_logo.png" alt="Logo" class="w-32 hidden lg:block">
+				<img src="~/assets/Instagram_logo_small.webp" alt="Logo" class="w-10 h-10 hidden md:block lg:hidden">
+			</div>
 			
 			<!-- Links -->
-			<div class="w-full md:w-52 flex justify-around md:justify-center md:flex-col">
+			<div class="w-full lg:w-52 flex justify-around md:justify-center md:flex-col">
 				<!-- Home link -->
 				<NavButton route="/test">
 					<template #icon>
@@ -60,7 +63,7 @@
 			</div>
 			
 			<!-- Additional links -->
-			<div class="hidden md:flex md:justify-center md:flex-col md:w-52">
+			<div class="hidden w-full lg:w-52 md:flex justify-around md:justify-center md:flex-col">
 				<NavButton route="/user/settings">
 					<template #icon>
 						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">

@@ -7,8 +7,8 @@ export default defineNuxtConfig({
 
     app: {
         head: {
-            title: 'Instagram'
-        }
+            title: 'Instagram',
+        },
     },
 
     // Initialize postcss plugins

@@ -1,5 +1,5 @@
 <template>
-    <div class="page w-full md:px-16 md:py-16 xl:px-32 mb-32">
+    <div class="page w-full h-screen lg:px-32 lg:py-16 md:px-16 md:py-8">
 
         <!-- Wrapper -->
         <div class="flex flex-col gap-4">

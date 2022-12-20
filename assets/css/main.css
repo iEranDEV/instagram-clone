@@ -11,7 +11,7 @@ body {
 }
 
 .page {
-    @apply pb-24 md:pb-0 md:ml-52 min-h-screen h-screen;
+    @apply pb-24 md:pb-0 md:ml-20 lg:ml-52 min-h-screen h-screen;
 }
 
 .form-input {
@@ -37,3 +37,7 @@ body {
 ::-webkit-file-upload-button {
     display: none;
   }
+
+.image-preview {
+    @apply h-16 w-16 xl:h-20 xl:w-20 bg-gray-100 rounded-lg relative;
+}

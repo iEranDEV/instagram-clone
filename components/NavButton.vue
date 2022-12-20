@@ -1,8 +1,8 @@
 <template>
 	<NuxtLink :to="route" class="w-full">
-        <div class="bg-white flex gap-4 justify-center items-center md:justify-start py-4 md:py-3 md:px-8 hover:bg-stone-50" :class="{ 'active-navbar-item':  useRoute().fullPath == route}">
+        <div class="bg-white flex gap-4 justify-center items-center py-4 lg:py-3 lg:px-8 md:justify-center lg:justify-start hover:bg-stone-50" :class="{ 'active-navbar-item':  useRoute().fullPath == route}">
             <slot name="icon" />
-            <p class="hidden md:block">
+            <p class="hidden lg:block">
                 <slot name="name" />
             </p>
         </div>

@@ -1,5 +1,5 @@
 <template>
-    <div class="page w-full h-screen md:px-32 md:py-16">
+    <div class="page w-full h-screen lg:px-32 lg:py-16 md:px-16 md:py-8">
 
         <div class="w-full h-screen md:h-full md:rounded-lg py-6 bg-white md:flex">
 
