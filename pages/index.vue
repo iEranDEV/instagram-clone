@@ -2,7 +2,7 @@
     <div>
         <!-- View when user is logged in -->
         <section v-if="useState('user').value != undefined">
-            Logged in
+            {{ useState('user').value }}
         </section>
 
         <!-- View when user is not logged in -->

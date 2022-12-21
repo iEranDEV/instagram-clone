@@ -40,14 +40,20 @@
 </template>
 
 <script lang="ts">
+import { FirebaseError } from '@firebase/util';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore';
 import { defineComponent } from 'vue';
-import { createUser } from '~/composables/firebase';
+import { useFirebase } from '~/composables/firebase';
+import User from '~/utils/User';
 
 export default defineComponent({
 	setup() {
 		definePageMeta({
 			layout: "accounts",
 		});
+
+		const firebase = useFirebase();
 
 		const email = ref('');
 		const username = ref('');
@@ -60,16 +66,46 @@ export default defineComponent({
 			username,
 			password,
 			error,
-			fullname
+			fullname,
+			firebase
 		}
 	},
 	methods: {
+		// Firebase auth register user
+		async registerFirebaseUser(email: string, password: string, displayName: string, fullName: string): Promise<User|FirebaseError> {
+			return createUserWithEmailAndPassword(this.firebase.auth, email, password).then(async (userCredentials) => {
+				const user_data = userCredentials.user;
+				const user: User = {
+					uid: user_data.uid,
+					displayName: displayName,
+					fullName: fullName,
+					email: user_data.email as string,
+					createdAt: user_data.metadata.creationTime as string,
+					photoURL: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/340px-Default_pfp.svg.png',
+					bio: ''
+				}
+
+				try {
+					await setDoc(doc(this.firebase.firestore, "users", user.uid), user);
+					useState('user', () => user);
+					navigateTo('/test');
+					return user;
+				} catch(error) {
+					return error as FirebaseError;
+				}
+
+			}).catch((error) => {
+				return error as FirebaseError;
+			});
+		},
+
+		// Handle client registration
 		async register() {
 			// Get data from response
-			let data = await createUser(this.email, this.password, this.username, this.fullname);
+			let data = await this.registerFirebaseUser(this.email, this.password, this.username, this.fullname);
 			
 			// Check if returned data is error
-			if(data.code != null) {
+			if(data instanceof Error) {
 
 				// Handle and set error message according to error code
 				switch(data.code) {

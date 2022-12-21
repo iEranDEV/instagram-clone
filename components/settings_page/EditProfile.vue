@@ -54,11 +54,10 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { updateUser, uploadPhoto } from '~/composables/firebase';
 
 export default defineComponent({
     setup() {
-        const user = useState('user').value as any;
+        const user = useState('user').value;
 
         return {
             user,
@@ -70,6 +69,7 @@ export default defineComponent({
         }
     },
     methods: {
+        /*
         async updateProfile() {
             if(this.file instanceof File) {
                 uploadPhoto(this.file).then(async (downloadURL) => {
@@ -85,7 +85,7 @@ export default defineComponent({
             if(target && target.files) {
                 this.file = target.files[0];
             }
-        }
+        }*/
     }
 })
 </script>

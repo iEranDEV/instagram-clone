@@ -34,14 +34,18 @@
 </template>
 
 <script lang="ts">
+import { FirebaseError } from '@firebase/util';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { doc, getDoc,  } from 'firebase/firestore';
 import { defineComponent } from 'vue';
-import { loginUser } from '~/composables/firebase';
 
 export default defineComponent({
 	setup() {
 		definePageMeta({
 			layout: "accounts",
 		});
+
+		const firebase = useFirebase();
 
 		const email = ref('');
 		const password = ref('');
@@ -51,15 +55,41 @@ export default defineComponent({
 			email,
 			password,
 			error,
+			firebase,
 		}
 	},
 	methods: {
+		// Firebase auth login user
+		async loginFirebaseUser(email: string, password: string): Promise<User|FirebaseError|undefined> {
+			return signInWithEmailAndPassword(this.firebase.auth, email, password).then(async (userCredentials) => {
+				const user_data = userCredentials.user;
+				const userSnap = await getDoc(doc(this.firebase.firestore, "users", user_data.uid));
+				if(userSnap.exists()) {
+					const data = userSnap.data();
+					const user: User = {
+						uid: data.uid,
+						displayName: data.displayName,
+						fullName: data.fullName,
+						email: data.email,
+						createdAt: data.createdAt,
+						photoURL: data.photoURL,
+						bio: data.bio
+					}
+					useState('user', () => user);
+					navigateTo('/test');
+					return user;
+				}
+			}).catch((error) => {
+				return error as FirebaseError;
+			});
+		},
+		
 		async login() {
 			// Get data from response
-			let data = await loginUser(this.email, this.password);
+			let data = await this.loginFirebaseUser(this.email, this.password);
 			
 			// Check if returned data is error
-			if(data.code != null) {
+			if(data instanceof Error) {
 
 				// Handle and set error message according to error code
 				switch(data.code) {
@@ -67,7 +97,6 @@ export default defineComponent({
 						this.error = 'Invalid password!';
 						break;
 				}
-				console.log(data.code + ' ' + data.message);
 
 			}
 		}
