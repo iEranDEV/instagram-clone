@@ -27,35 +27,3 @@ export const useFirebase = () => {
         firestore
     }
 }
-
-/*
-// Update user
-export const updateUser = async (user: any) => {
-    const snap_old = await getDoc(doc(db, "users", user.uid));
-    if(snap_old.exists()) {
-        const user_old = snap_old.data();
-        if(user_old.email != user.email && auth.currentUser) {
-            await updateEmail(auth.currentUser, user.email).catch((error) => {
-                return error;
-            })
-        }
-        setDoc(doc(db, "users", user.uid), user).then(() => {
-            return user;
-        }).catch((error) => {
-            return error;
-        })
-    }
-}
-
-// Upload photo to storage
-export const uploadPhoto = async (file: File) => {
-    return uploadBytes(ref(storage, file.name), file).then(async (snapshot) => {
-        return getDownloadURL(snapshot.ref).then((downloadURL) => {
-            return downloadURL;
-        })
-    }).catch((error) => {
-        console.log(error);
-        return error;
-    })
-}
-*/

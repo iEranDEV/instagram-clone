@@ -1,6 +1,6 @@
 <template>
     <div class="w-full h-full overflow-auto pb-20 md:pr-4">
-            <form class="h-full w-full flex flex-col gap-8" @submit.prevent="updateProfile()">
+            <form class="h-full w-full flex flex-col gap-8" @submit.prevent="updateUser()">
                 <!-- User avatar -->
                 <div class="flex">
                     <img :src="user.photoURL" alt="Avatar" class="w-16 h-16 rounded-full">
@@ -45,7 +45,7 @@
                     <p class="text-stone-400 text-sm">
                         The e-mail address is used to log in to the website. Remember to confirm the new address after changing it
                     </p>
-                </div>
+                </div> 
 
                 <button type="submit" class="btn bg-sky-500 md:w-40">Save changes</button>
             </form>
@@ -53,14 +53,21 @@
 </template>
 
 <script lang="ts">
+import { updateEmail } from '@firebase/auth';
+import { doc, setDoc } from '@firebase/firestore';
+import { getDownloadURL, uploadBytes, ref } from '@firebase/storage';
+import { FirebaseError } from '@firebase/util';
+import { getDoc } from 'firebase/firestore';
 import { defineComponent } from 'vue'
 
 export default defineComponent({
     setup() {
-        const user = useState('user').value;
+        const user = useState('user').value as User;
+        const firebase = useFirebase();
 
         return {
             user,
+            firebase,
         }
     },
     data() {
@@ -69,15 +76,31 @@ export default defineComponent({
         }
     },
     methods: {
-        /*
-        async updateProfile() {
+        async updateUser() {
             if(this.file instanceof File) {
-                uploadPhoto(this.file).then(async (downloadURL) => {
-                    if(downloadURL) this.user.photoURL = downloadURL;
-                    await updateUser(this.user);
+                let url = await uploadBytes(ref(this.firebase.storage, this.file.name), this.file).then(async (snapshot) => {
+                    return getDownloadURL(snapshot.ref).then((url) => {
+                        return url;
+                    })
                 });
+                if(url) this.user.photoURL = url;
+                await this.updateFirebaseUser();
             } else {
-                await updateUser(this.user);
+                await this.updateFirebaseUser();
+            }
+        },
+        async updateFirebaseUser() {
+            const snap_old = await getDoc(doc(this.firebase.firestore, "users", this.user.uid));
+            if(snap_old.exists()) {
+                const user_old = snap_old.data();
+                if(user_old.email != this.user.email && this.firebase.auth.currentUser) {
+                    await updateEmail(this.firebase.auth.currentUser, this.user.email).catch((error) => {
+                        return error as FirebaseError;
+                    })
+                }
+                await setDoc(doc(this.firebase.firestore, "users", this.user.uid), this.user).catch((error) => {
+                    return error as FirebaseError;
+                })
             }
         },
         submitPhoto(event: Event) {
@@ -85,7 +108,7 @@ export default defineComponent({
             if(target && target.files) {
                 this.file = target.files[0];
             }
-        }*/
+        }
     }
 })
 </script>
