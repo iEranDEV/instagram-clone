@@ -9,7 +9,8 @@ declare global {
         createdAt: string,
         photoURL: string,
         bio: string,
-        saved: Array<string>
+        saved: Array<string>,
+        following: Array<string>,
     }
 
     type Post = {

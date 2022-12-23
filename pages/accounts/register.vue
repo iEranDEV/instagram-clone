@@ -82,7 +82,8 @@ export default defineComponent({
 					createdAt: user_data.metadata.creationTime as string,
 					photoURL: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/340px-Default_pfp.svg.png',
 					bio: '',
-					saved: Array<string>()
+					saved: Array<string>(),
+					following: Array<string>(),
 				}
 
 				try {

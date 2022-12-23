@@ -1,7 +1,7 @@
 <template>
     <div class="w-full page" id="test">
         <p>
-            Home page
+            {{ useState('user').value.following }}
         </p>
     </div>
 </template>
