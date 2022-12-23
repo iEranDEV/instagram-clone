@@ -35,7 +35,7 @@
 
 <script lang="ts">
 import { FirebaseError } from '@firebase/util';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { browserLocalPersistence, setPersistence, signInWithEmailAndPassword } from 'firebase/auth';
 import { doc, getDoc,  } from 'firebase/firestore';
 import { defineComponent } from 'vue';
 
@@ -61,29 +61,31 @@ export default defineComponent({
 	methods: {
 		// Firebase auth login user
 		async loginFirebaseUser(email: string, password: string): Promise<User|FirebaseError|undefined> {
-			return signInWithEmailAndPassword(this.firebase.auth, email, password).then(async (userCredentials) => {
-				const user_data = userCredentials.user;
-				const userSnap = await getDoc(doc(this.firebase.firestore, "users", user_data.uid));
-				if(userSnap.exists()) {
-					const data = userSnap.data();
-					const user: User = {
-						uid: data.uid,
-						displayName: data.displayName,
-						fullName: data.fullName,
-						email: data.email,
-						createdAt: data.createdAt,
-						photoURL: data.photoURL,
-						bio: data.bio,
-						saved: data.saved,
-						following: data.following,
+			return setPersistence(this.firebase.auth, browserLocalPersistence).then(async () => {
+				return signInWithEmailAndPassword(this.firebase.auth, email, password).then(async (userCredentials) => {
+					const user_data = userCredentials.user;
+					const userSnap = await getDoc(doc(this.firebase.firestore, "users", user_data.uid));
+					if(userSnap.exists()) {
+						const data = userSnap.data();
+						const user: User = {
+							uid: data.uid,
+							displayName: data.displayName,
+							fullName: data.fullName,
+							email: data.email,
+							createdAt: data.createdAt,
+							photoURL: data.photoURL,
+							bio: data.bio,
+							saved: data.saved,
+							following: data.following,
+						}
+						useState('user', () => user);
+						navigateTo('/test');
+						return user;
 					}
-					useState('user', () => user);
-					navigateTo('/test');
-					return user;
-				}
-			}).catch((error) => {
-				return error as FirebaseError;
-			});
+				}).catch((error) => {
+					return error as FirebaseError;
+				});
+			})
 		},
 		
 		async login() {

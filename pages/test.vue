@@ -1,7 +1,7 @@
 <template>
     <div class="w-full page" id="test">
         <p>
-            {{ useState('user').value.following }}
+            {{ useState('user') }}
         </p>
     </div>
 </template>
@@ -11,7 +11,6 @@ import { defineComponent } from 'vue'
 
 export default defineComponent({
     setup() {
-        
     },
 })
 </script>

@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
-import { getFirestore } from "firebase/firestore";
+import { browserLocalPersistence, getAuth, setPersistence } from 'firebase/auth';
+import { doc, getDoc, getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
 export const useFirebase = () => {
@@ -17,6 +17,18 @@ export const useFirebase = () => {
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
+    setPersistence(auth, browserLocalPersistence);
+    auth.onAuthStateChanged(async (user) => {
+        if(user) {
+            const userSnap = await getDoc(doc(firestore, "users", user.uid));
+            if(userSnap.exists()) {
+                useState('user', () => userSnap.data() as User);
+            }
+        } else {
+            useState('user', () => {});
+            navigateTo('/accounts/login')
+        }
+    })
     const storage = getStorage(app);
     const firestore = getFirestore(app);
 
