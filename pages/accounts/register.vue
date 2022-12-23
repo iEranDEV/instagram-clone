@@ -45,7 +45,6 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import { defineComponent } from 'vue';
 import { useFirebase } from '~/composables/firebase';
-import User from '~/utils/User';
 
 export default defineComponent({
 	setup() {
@@ -105,7 +104,7 @@ export default defineComponent({
 			let data = await this.registerFirebaseUser(this.email, this.password, this.username, this.fullname);
 			
 			// Check if returned data is error
-			if(data instanceof Error) {
+			if(data instanceof FirebaseError) {
 
 				// Handle and set error message according to error code
 				switch(data.code) {

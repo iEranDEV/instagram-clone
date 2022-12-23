@@ -1,6 +1,6 @@
 <template>
-    <div class="page w-full h-screen lg:px-32 lg:py-16 md:px-16 md:py-8">
-        <div class="w-full h-screen md:h-full md:rounded-lg p-6 bg-white md:flex flex-col">
+    <div class="page w-full h-screen lg:px-32 lg:py-16 md:px-16 md:py-8 mb-10 md:mb-0">
+        <div class="w-full h-screen md:h-full md:rounded-lg p-6 bg-white flex flex-col gap-2 md:gap-4">
 
             <div class="flex flex-col w-full md:flex-row md:mb-1">
                 <!-- Upload image box -->
@@ -35,23 +35,56 @@
             <!-- Description -->
             <div class="max-w-md">
                 <label for="description" class="font-semibold text-gray-500">Description</label>
-                <textarea rows=5 type="text" id="description" name="description" placeholder="Describe your pictures" class="form-input bg-stone-100 my-1"></textarea>
+                <textarea rows=3 type="text" v-model="description" id="description" name="description" placeholder="Describe your pictures" class="form-input bg-stone-100 my-1"></textarea>
             </div>
+
+            <!-- Tags -->
+            <div class="max-w-md">
+                <div class="flex justify-between items-center">
+                    <label for="tags" class="font-semibold text-gray-500">Tags</label>
+                    <p class="text-stone-400 text-sm">
+                        {{ tags.length }}/10
+                    </p>
+                </div>
+                <input @keydown="tagInput" type="text" id="tags" name="tags" placeholder="Add tags to your pictures" class="form-input bg-stone-100 my-1" />
+                <div class="w-full flex flex-wrap gap-x-4 gap-y-2 my-1">
+                    <p v-for="tag in tags" :key="tag" class="bg-gray-100 rounded-full flex justify-between gap-2 items-center px-3 py-1">
+                        <span>{{ tag }}</span>
+                        <svg @click="deleteTag(tag)" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </p>
+                </div>
+            </div>
+
+            <button @click="uploadPost()" type="submit" class="btn bg-sky-500 md:w-40">Upload post</button>
 
         </div>
     </div>
 </template>
 
 <script lang="ts">
+import { collection, doc } from '@firebase/firestore';
+import { setDoc } from 'firebase/firestore';
+import { uploadBytes, ref, getDownloadURL } from 'firebase/storage';
+import { ref as vueRef } from 'vue';
 import { defineComponent } from 'vue'
 
 export default defineComponent({
     setup() {
-        
+        const firebase = useFirebase();
+        const description = vueRef('');
+
+        return {
+            firebase,
+            description
+        }
     },
     data() {
         return {
-            files: Array<File>()
+            files: Array<File>(),
+            tags: Array<string>(),
+            urls: Array<string>(),
         }
     },
     methods: {
@@ -67,6 +100,40 @@ export default defineComponent({
         deletePhoto(file: File) {
             let index = this.files.indexOf(file);
             this.files.splice(index, 1)
+        },
+        tagInput(event: KeyboardEvent) {
+            if(event.key === ' ') {
+                event.preventDefault();
+                let target = event.target as HTMLInputElement;
+                let tag = target.value;
+                target.value = '';
+                this.tags.push(tag);
+            }
+        },
+        deleteTag(tag: string) {
+            let index = this.tags.indexOf(tag);
+            this.tags.splice(index, 1)
+        },
+        async uploadPost() {
+            for(const file of this.files) {
+                const url = await uploadBytes(ref(this.firebase.storage, file.name), file).then(async (snapshot) => {
+                    return getDownloadURL(snapshot.ref).then((url) => {
+                        return url;
+                    })
+                })
+                this.urls.push(url);
+            }
+
+            const postRef = doc(collection(this.firebase.firestore, "posts"));
+            const post: Post = {
+                id: postRef.id,
+                author: (useState('user').value as User).uid,
+                description: this.description,
+                createdAt: new Date().toString(),
+                photos: this.urls,
+                tags: this.tags
+            }
+            await setDoc(postRef, post);
         }
     }
 })

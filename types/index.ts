@@ -10,4 +10,13 @@ declare global {
         photoURL: string,
         bio: string,
     }
+
+    type Post = {
+        id: string,
+        author: string,
+        description: string,
+        createdAt: string,
+        photos: Array<string>,
+        tags: Array<string>,
+    }
 }
