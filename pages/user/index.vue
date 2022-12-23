@@ -80,8 +80,8 @@
             </div>
 
             <!-- Posts section -->
-            <div class="w-full grid grid-cols-3 gap-2">
-                <!--<img src="https://wallpaperaccess.com/full/1138975.jpg" alt="test" v-for="index in 2" :key="index">-->
+            <div class="w-full grid grid-cols-3 gap-2" v-if="posts">
+                <post-image v-for="post in posts" :key="post.id" :post="post"></post-image>
             </div>
 
         </div>
@@ -90,11 +90,28 @@
 </template>
 
 <script lang="ts">
+import { collection, getDocs, query, where } from '@firebase/firestore';
 import { defineComponent } from 'vue'
 
 export default defineComponent({
     setup() {
-        
+        const firebase = useFirebase();
+
+        return {
+            firebase,
+        }
+    },
+    data() {
+        return {
+            posts: Array<Post>(),
+        }
+    },
+    async mounted() {
+        const q = query(collection(this.firebase.firestore, "posts"), where("author", "==", this.firebase.auth.currentUser?.uid));
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((doc) => {
+            this.posts.push(doc.data() as Post);
+        })
     }
 })
 </script>
