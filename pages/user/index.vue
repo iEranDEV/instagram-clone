@@ -90,7 +90,7 @@
 </template>
 
 <script lang="ts">
-import { collection, getDocs, query, where } from '@firebase/firestore';
+import { collection, getDocs, orderBy, query, where } from '@firebase/firestore';
 import { defineComponent } from 'vue'
 
 export default defineComponent({
@@ -107,7 +107,7 @@ export default defineComponent({
         }
     },
     async mounted() {
-        const q = query(collection(this.firebase.firestore, "posts"), where("author", "==", this.firebase.auth.currentUser?.uid));
+        const q = query(collection(this.firebase.firestore, "posts"), where("author", "==", this.firebase.auth.currentUser?.uid), orderBy("createdAt", "desc"));
         const querySnapshot = await getDocs(q);
         querySnapshot.forEach((doc) => {
             this.posts.push(doc.data() as Post);

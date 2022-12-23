@@ -15,7 +15,7 @@ declare global {
         id: string,
         author: string,
         description: string,
-        createdAt: string,
+        createdAt: Date,
         photos: Array<string>,
         tags: Array<string>,
     }

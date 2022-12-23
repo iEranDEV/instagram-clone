@@ -11,7 +11,7 @@ body {
 }
 
 .page {
-    @apply pb-24 md:pb-0 md:ml-20 lg:ml-52 min-h-screen h-screen;
+    @apply pb-24 md:pb-0 md:ml-20 lg:ml-52 min-h-screen md:h-screen;
 }
 
 .form-input {

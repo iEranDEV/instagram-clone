@@ -129,7 +129,7 @@ export default defineComponent({
                 id: postRef.id,
                 author: (useState('user').value as User).uid,
                 description: this.description,
-                createdAt: new Date().toString(),
+                createdAt: new Date(),
                 photos: this.urls,
                 tags: this.tags
             }
