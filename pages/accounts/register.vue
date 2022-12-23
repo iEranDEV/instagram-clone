@@ -81,7 +81,8 @@ export default defineComponent({
 					email: user_data.email as string,
 					createdAt: user_data.metadata.creationTime as string,
 					photoURL: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/340px-Default_pfp.svg.png',
-					bio: ''
+					bio: '',
+					saved: Array<string>()
 				}
 
 				try {

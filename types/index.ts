@@ -9,6 +9,7 @@ declare global {
         createdAt: string,
         photoURL: string,
         bio: string,
+        saved: Array<string>
     }
 
     type Post = {
@@ -18,5 +19,6 @@ declare global {
         createdAt: Date,
         photos: Array<string>,
         tags: Array<string>,
+        likedBy: Array<string>
     }
 }

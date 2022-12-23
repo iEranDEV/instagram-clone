@@ -1,8 +1,6 @@
 <template>
     <div class="w-full page" id="test">
-        <p>
-            Home page
-        </p>
+        {{ useState('user').value.saved }}
     </div>
 </template>
 
@@ -16,11 +14,6 @@ export default defineComponent({
 })
 </script>
 
-
 <style>
-
-#test {
-    height: 1000px;
-}
 
 </style>

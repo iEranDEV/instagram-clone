@@ -131,7 +131,8 @@ export default defineComponent({
                 description: this.description,
                 createdAt: new Date(),
                 photos: this.urls,
-                tags: this.tags
+                tags: this.tags,
+                likedBy: Array<string>()
             }
             await setDoc(postRef, post);
         }

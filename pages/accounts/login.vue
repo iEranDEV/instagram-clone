@@ -73,7 +73,8 @@ export default defineComponent({
 						email: data.email,
 						createdAt: data.createdAt,
 						photoURL: data.photoURL,
-						bio: data.bio
+						bio: data.bio,
+						saved: data.saved
 					}
 					useState('user', () => user);
 					navigateTo('/test');

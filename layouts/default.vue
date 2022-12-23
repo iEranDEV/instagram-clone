@@ -1,12 +1,47 @@
 <template>
 	<div class="flex flex-col justify-between md:justify-start md:flex-row">
 
-		<div class="absolute bg-red-500 h-screen w-full lg:w-96 lg:left-52">
+		<!-- Search menu -->
+		<div class="fixed flex flex-col gap-4 bg-white h-screen w-full md:w-96 transition-all duration-500 p-4 z-20 md:border-r-2 border-gray-200" :class="searchMenu ? 'right-0 md:left-20 lg:left-52' : '-left-full'">
+            <div class="flex justify-end cursor-pointer">
+				<svg @click="toggleSearch()" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 cursor pointer">
+					<path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+				</svg>
+			</div>
+			<form @submit.prevent="search()" class="w-full rounded-lg overflow-hidden flex gap-2">
+				<input type="text" v-model="searchVal" placeholder="Type something" class="form-input bg-stone-100 w-full">
+				<button type="submit" class="h-full bg-sky-500 text-stone-100 p-2 rounded-lg flex justify-center items-center cursor-pointer">
+					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+						<path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+					</svg>
+				</button>
+			</form>
+
+			<hr>
+
+			<div v-if="results.length > 0" class="w-full h-full overflow-auto flex flex-col gap-4">
+				<!--<p v-for="number in 200" :key="number">test</p>-->
+				<div v-for="result in results" :key="result.uid" class="w-full flex items-center gap-4">
+					<NuxtLink :to="'/user/' + result.uid" class="w-full flex items-center gap-4">
+						<img :src="result.photoURL" alt="Picture" class="h-10 w-10">
+						<div class="flex flex-col justify-center">
+							<p class="font-semibold">{{ result.displayName }}</p>
+							<span class="text-sm text-gray-400">{{ result.fullName }}</span>
+						</div>
+					</NuxtLink>
+				</div>
+			</div>
+			<div v-else class="w-full h-full flex justify-center items-center flex-col text-gray-400">
+				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" class="w-8 h-8">
+					<path stroke-linecap="round" stroke-linejoin="round" d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+				</svg>
+				<p>No users with given name were found</p>
+			</div>
 
 		</div>	
 
 		<!-- Navbar -->
-		<nav class="bg-white w-full md:h-screen md:w-20 lg:w-52 border-t-2 border-stone-200 md:border-t-0 flex justify-center md:justify-around md:items-center md:flex-col fixed bottom-0 ">
+		<nav class="bg-white w-full md:h-screen md:w-20 lg:w-52 border-t-2 border-stone-200 md:border-t-0 z-30 flex justify-center md:justify-around md:items-center md:flex-col fixed bottom-0 ">
 			<!-- Logo -->
 			<div class="flex justify-center items-center">
 				<img src="~/assets/instagram_logo.png" alt="Logo" class="w-32 hidden lg:block">
@@ -26,7 +61,7 @@
 				</NavButton>
 
 				<!-- Dicover link -->
-				<div @click="toogleSearch()" class="bg-white w-full flex gap-4 justify-center items-center py-4 lg:py-3 lg:px-8 md:justify-center lg:justify-start hover:bg-stone-50 cursor-pointer" :class="{ 'active-navbar-item':  useRoute().fullPath == route}">
+				<div @click="toggleSearch()" class="bg-white w-full flex gap-4 justify-center items-center py-4 lg:py-3 lg:px-8 md:justify-center lg:justify-start hover:bg-stone-50 cursor-pointer">
 					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
 						<path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
 					</svg>
@@ -43,14 +78,14 @@
 					<template #name>Create</template>
 				</NavButton>
 
-				<!-- Notifications link -->
-				<NavButton>
+				<!-- Saved link -->
+				<NavButton route="/post/saved">
 					<template #icon>
 						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-							<path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
+							<path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" />
 						</svg>
 					</template>
-					<template #name>Notifications</template>
+					<template #name>Saved</template>
 				</NavButton>
 
 				<!-- Profile link -->
@@ -75,7 +110,7 @@
 					</template>
 					<template #name>Settings</template>
 				</NavButton>
-				<NavButton>
+				<NavButton route="/">
 					<template #icon>
 						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
 							<path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" />
@@ -94,10 +129,43 @@
 </template>
 
 <script lang="ts">
+import { collection, query, where, getDocs } from "firebase/firestore";
 
 export default defineComponent({
 	setup() {
+		const searchMenu = ref(false);
+		const searchVal = ref('');
+		const firebase = useFirebase();
 
+		return {
+			searchMenu,
+			searchVal,
+			firebase,
+		}
+	},
+	data() {
+		return {
+			results: Array<User>(),
+		}
+	},
+	methods: {
+		toggleSearch() {
+            this.searchMenu = !this.searchMenu;
+		},
+		async search() {
+			this.results = [];
+			const q = query(collection(this.firebase.firestore, "users"), where('displayName', '>=', this.searchVal), where('displayName', '<=', this.searchVal + 'z'));
+			const querySnapshot = await getDocs(q);
+			querySnapshot.forEach((doc) => {
+				this.results.push(doc.data() as User);
+			})
+			this.searchVal = '';
+		}
+	},
+	watch: {
+		$route() {
+			this.searchMenu = false;
+		}
 	}
 })
 </script>
