@@ -1,5 +1,5 @@
 <template>
-    <div class="aspect-square z-10 relative">
+    <div class="aspect-square z-10 relative w-full">
         <img :src="photos[currentPhoto]" alt="Image" class="w-full aspect-square">
 
         <!-- Counter -->
