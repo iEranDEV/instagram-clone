@@ -79,7 +79,7 @@ export default defineComponent({
 							following: data.following,
 						}
 						useState('user', () => user);
-						navigateTo('/test');
+						navigateTo('/');
 						return user;
 					}
 				}).catch((error) => {

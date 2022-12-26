@@ -70,6 +70,9 @@ import EmailNotifications from '~/components/settings_page/EmailNotifications.vu
 
 export default defineComponent({
     setup() {
+        definePageMeta({
+            middleware: ['auth']
+        });
         const menu = ref(false);
         const page = ref('edit_profile');
         const firebase = useFirebase();
@@ -91,6 +94,7 @@ export default defineComponent({
         async logOut() {
             await this.firebase.auth.signOut();
             this.$forceUpdate();
+            navigateTo('/accounts/login')
         }
     },
     components: {

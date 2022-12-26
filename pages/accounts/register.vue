@@ -89,7 +89,7 @@ export default defineComponent({
 				try {
 					await setDoc(doc(this.firebase.firestore, "users", user.uid), user);
 					useState('user', () => user);
-					navigateTo('/test');
+					navigateTo('/');
 					return user;
 				} catch(error) {
 					return error as FirebaseError;

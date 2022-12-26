@@ -9,7 +9,9 @@ import { defineComponent } from 'vue'
 
 export default defineComponent({
     setup() {
-        
+        definePageMeta({
+            middleware: ['auth']
+        });
     },
 })
 </script>

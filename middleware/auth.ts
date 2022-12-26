@@ -1,3 +1,6 @@
 export default defineNuxtRouteMiddleware((to, from) => {
-    return console.log('test');
+    if(useFirebase().auth.currentUser === null && from.fullPath !== to.fullPath) {
+        navigateTo('/accounts/login');
+    }
+    return true;
 })

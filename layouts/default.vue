@@ -51,7 +51,7 @@
 			<!-- Links -->
 			<div class="w-full lg:w-52 flex justify-around md:justify-center md:flex-col">
 				<!-- Home link -->
-				<NavButton route="/test">
+				<NavButton route="/">
 					<template #icon>
 						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
 							<path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
@@ -110,7 +110,7 @@
 					</template>
 					<template #name>Settings</template>
 				</NavButton>
-				<NavButton route="/">
+				<NavButton route="/test">
 					<template #icon>
 						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
 							<path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" />
@@ -126,6 +126,12 @@
 		<slot v-if="$store.state.loaded" />
 		<div v-else class="w-full page flex justify-center items-center">
 			<svg class="animate-spin h-8 w-8" fill="#6b7280" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg>
+		</div>
+
+		<!-- Notifications -->
+		<div class="fixed top-0 right-0 h-10 w-80 m-2 flex flex-col">
+			<!--<notification-element :error="false" message="test" />-->
+			<notification-element v-for="notification in $store.state.notifications" :error="notification.error" :message="notification.message" :key="notification.message" />
 		</div>
 
 	</div>	
@@ -149,6 +155,7 @@ export default defineComponent({
 	data() {
 		return {
 			results: Array<User>(),
+			notifications: Array<string>(),
 		}
 	},
 	methods: {

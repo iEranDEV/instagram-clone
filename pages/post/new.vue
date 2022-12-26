@@ -72,6 +72,9 @@ import { defineComponent } from 'vue'
 
 export default defineComponent({
     setup() {
+        definePageMeta({
+            middleware: ['auth']
+        });
         const firebase = useFirebase();
         const description = vueRef('');
 
@@ -135,6 +138,8 @@ export default defineComponent({
                 likedBy: Array<string>()
             }
             await setDoc(postRef, post);
+            navigateTo('/');
+            this.$store.commit('addNotification', {error: false, message: 'Successfully created a new post'});
         }
     }
 })

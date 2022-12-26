@@ -77,6 +77,9 @@ import { defineComponent } from 'vue'
 
 export default defineComponent({
     setup() {
+        definePageMeta({
+            middleware: ['auth']
+        });
         const firebase = useFirebase();
 
         return {

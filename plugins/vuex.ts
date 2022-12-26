@@ -1,10 +1,11 @@
 import { createStore } from "vuex";
 
-const store = createStore({
+export const store = createStore({
     state() {
         return {
             user: {} as User,
             loaded: false,
+            notifications: Array<{error: boolean, message: string}>()
         }
     },
 
@@ -14,6 +15,15 @@ const store = createStore({
         },
         setUser(state, user) {
             state.user = user as User;
+        },
+        addNotification(state, notification) {
+            state.notifications.push(notification);
+            const removeNotification = async () => {
+                setTimeout(() => {
+                    state.notifications.splice(state.notifications.indexOf(notification), 1);
+                }, 3000);
+            }
+            removeNotification();
         }
     },
 })
