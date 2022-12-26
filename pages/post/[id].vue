@@ -1,5 +1,5 @@
 <template>
-    <div class="page w-full h-full lg:px-8 lg:py-32 md:px-4 md:py-32 md:mb-0">
+    <div class="page w-full h-full lg:px-32 lg:py-32 md:px-16 md:py-32 md:mb-0">
         <div class="w-full h-full md:h-full md:rounded-lg md:overflow-hidden flex flex-col md:flex-row" v-if="post.photos && $store.state.loaded">
 
             <!-- Photos -->

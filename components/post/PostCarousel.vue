@@ -1,6 +1,6 @@
 <template>
-    <div class="aspect-square z-10 relative w-full">
-        <img :src="photos[currentPhoto]" alt="Image" class="w-full aspect-square">
+    <div class="aspect-square z-10 relative w-full md:max-w-md lg:max-w-lg">
+        <img :src="photos[currentPhoto]" alt="Image" class="w-full md:max-w-md lg:max-w-lg aspect-square">
 
         <!-- Counter -->
         <div class="absolute bg-gray-100/[.09] top-0 right-0 m-2 rounded-full px-2 py-1">
