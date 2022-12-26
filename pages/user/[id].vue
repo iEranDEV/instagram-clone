@@ -2,7 +2,7 @@
     <div class="page w-full h-screen lg:px-32 lg:py-16 md:px-16 md:py-8">
 
         <!-- Wrapper -->
-        <div v-if="user != {} && posts" class="flex flex-col gap-4">
+        <div v-if="$store.state.loaded && user" class="flex flex-col gap-4">
 
             <!-- Profile header -->
             <div class="bg-white w-full md:rounded-lg p-6 flex flex-col gap-4">
@@ -14,7 +14,7 @@
                         <img :src="user.photoURL" alt="Avatar" class="w-20 h-20 md:w-32 md:h-32 rounded-full object-fill">
                         <div class="flex flex-col w-full">
                             <h1 class="h-1/2 flex text-xl md:text-2xl">{{ user.displayName }}</h1>
-                            <button v-if="!useState('user').value.following.includes(user.uid)" @click="follow()" class="flex py-2 px-3 bg-sky-500 text-stone-100 w-36 rounded-lg justify-around items-center font-semibold text-sm">
+                            <button v-if="!$store.state.user.following.includes(user.uid)" @click="follow()" class="flex py-2 px-3 bg-sky-500 text-stone-100 w-36 rounded-lg justify-around items-center font-semibold text-sm">
                                 Follow
                             </button>
                             <button v-else @click="follow()" class="flex py-2 px-3 bg-gray-300 text-stone-100 w-36 rounded-lg justify-around items-center font-semibold text-sm">
@@ -90,31 +90,35 @@ export default defineComponent({
             followers: 0
         }
     },
-    async mounted() {
-
-        const id = useRoute().params.id as string;
-        if(id === this.firebase.auth.currentUser?.uid) {
-            navigateTo('/user/');
-        } else {
-            const userSnapshot = await getDoc(doc(this.firebase.firestore, "users", id))
-            if(userSnapshot.exists()) {
-                this.user = userSnapshot.data() as User;
-            }
-
-            const q = query(collection(this.firebase.firestore, "posts"), where("author", "==", id), orderBy("createdAt", "desc"));
-            const querySnapshot = await getDocs(q);
-            querySnapshot.forEach((doc) => {
-                this.posts.push(doc.data() as Post);
-            })
-
-            const followersQuery = query(collection(this.firebase.firestore, "users"), where("following", "array-contains", this.user.uid));
-            const followersSnapshot = await getCountFromServer(followersQuery);
-            this.followers = followersSnapshot.data().count;
+    computed: {
+        loaded() {
+            return this.$store.state.loaded;
         }
     },
     methods: {
+        async syncData() {
+            const id = useRoute().params.id as string;
+            if(id === this.$store.state.user.uid) {
+                navigateTo('/user/');
+            } else {
+                const userSnapshot = await getDoc(doc(this.firebase.firestore, "users", id))
+                if(userSnapshot.exists()) {
+                    this.user = userSnapshot.data() as User;
+                }
+
+                const q = query(collection(this.firebase.firestore, "posts"), where("author", "==", id), orderBy("createdAt", "desc"));
+                const querySnapshot = await getDocs(q);
+                querySnapshot.forEach((doc) => {
+                    this.posts.push(doc.data() as Post);
+                })
+
+                const followersQuery = query(collection(this.firebase.firestore, "users"), where("following", "array-contains", this.user.uid));
+                const followersSnapshot = await getCountFromServer(followersQuery);
+                this.followers = followersSnapshot.data().count;
+            }
+        },
         async follow() {
-            const currentUser = useState('user').value as User;
+            const currentUser = this.$store.state.user as User;
             if(currentUser.following.includes(this.user.uid)) {
                 currentUser.following.splice(currentUser.following.indexOf(this.user.uid), 1)
             } else {
@@ -123,6 +127,16 @@ export default defineComponent({
             await updateDoc(doc(this.firebase.firestore, "users", currentUser.uid), {
                 "following": currentUser.following,
             })
+        }
+    },
+    mounted() {
+        if(this.$store.state.user.uid != undefined) this.syncData();
+    },
+    watch: {
+        loaded(oldVal, newVal) {
+            if(oldVal) {
+                this.syncData();
+            }
         }
     }
 })

@@ -1,7 +1,10 @@
 <template>
     <div class="w-full page" id="test">
         <p>
-            {{ useState('user') }}
+            {{ $store.state.user }}
+        </p>
+        <p>
+            {{ $store.state.loaded }}
         </p>
     </div>
 </template>

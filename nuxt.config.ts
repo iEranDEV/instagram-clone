@@ -30,6 +30,6 @@ export default defineNuxtConfig({
                 measurementId: process.env.NUXT_MEASUREMENT_ID
             }
         }
-    }
+    },
     
 })

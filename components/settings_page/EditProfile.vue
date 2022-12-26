@@ -1,6 +1,6 @@
 <template>
     <div class="w-full h-full overflow-auto pb-20 md:pr-4">
-            <form class="h-full w-full flex flex-col gap-8" @submit.prevent="updateUser()">
+            <form v-if="$store.state.loaded && user" class="h-full w-full flex flex-col gap-8" @submit.prevent="updateUser()">
                 <!-- User avatar -->
                 <div class="flex">
                     <img :src="user.photoURL" alt="Avatar" class="w-16 h-16 rounded-full">
@@ -62,17 +62,31 @@ import { defineComponent } from 'vue'
 
 export default defineComponent({
     setup() {
-        const user = useState('user').value as User;
         const firebase = useFirebase();
 
         return {
-            user,
             firebase,
         }
     },
     data() {
         return {
             file: {},
+            user: {} as User,
+        }
+    },
+    computed: {
+        loaded() {
+            return this.$store.state.loaded;
+        }
+    },
+    mounted() {
+        if(this.$store.state.user.uid != undefined) this.user = this.$store.state.user as User;
+    },
+    watch: {
+        loaded(oldVal, newVal) {
+            if(oldVal) {
+                this.user = this.$store.state.user as User;
+            }
         }
     },
     methods: {

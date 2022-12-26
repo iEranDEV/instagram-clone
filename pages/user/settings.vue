@@ -90,6 +90,7 @@ export default defineComponent({
         },
         async logOut() {
             await this.firebase.auth.signOut();
+            this.$forceUpdate();
         }
     },
     components: {

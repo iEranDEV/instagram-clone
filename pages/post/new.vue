@@ -127,7 +127,7 @@ export default defineComponent({
             const postRef = doc(collection(this.firebase.firestore, "posts"));
             const post: Post = {
                 id: postRef.id,
-                author: (useState('user').value as User).uid,
+                author: (this.$store.state.user as User).uid,
                 description: this.description,
                 createdAt: new Date(),
                 photos: this.urls,

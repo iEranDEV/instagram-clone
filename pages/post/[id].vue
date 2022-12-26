@@ -1,6 +1,6 @@
 <template>
     <div class="page w-full h-full lg:px-8 lg:py-32 md:px-4 md:py-32 md:mb-0">
-        <div class="w-full h-full md:h-full md:rounded-lg md:overflow-hidden flex flex-col md:flex-row" v-if="post.photos">
+        <div class="w-full h-full md:h-full md:rounded-lg md:overflow-hidden flex flex-col md:flex-row" v-if="post.photos && $store.state.loaded">
 
             <!-- Photos -->
             <PostCarousel :photos="post.photos"></PostCarousel>
@@ -27,15 +27,19 @@
                         </p>
                     </div>
 
-                    <div class="flex items-center w-full gap-2">
-                        <svg @click="likePost()" xmlns="http://www.w3.org/2000/svg" :fill="post.likedBy.includes(useState('user').value.uid) ? '#f43f5e' : 'none'" viewBox="0 0 24 24" stroke-width="1.5" :stroke="post.likedBy.includes(useState('user').value.uid) ? '#f43f5e' : 'currentColor'" class="w-6 h-6 cursor-pointer">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
-                        </svg>
+                    <div class="flex items-center w-full gap-6">
+                        <div class="flex gap-2 items-center">
+                            <svg @click="likePost()" xmlns="http://www.w3.org/2000/svg" :fill="post.likedBy.includes($store.state.user.uid) ? '#f43f5e' : 'none'" viewBox="0 0 24 24" stroke-width="1.5" :stroke="post.likedBy.includes($store.state.user.uid) ? '#f43f5e' : 'currentColor'" class="w-6 h-6 cursor-pointer">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+                            </svg>
+                            <p class="font-semibold">
+                                {{ post.likedBy.length }}
+                            </p>
+                        </div>
 
-                        <svg @click="savePost()" xmlns="http://www.w3.org/2000/svg" :fill="useState('user').value.saved.includes(post.id) ? 'currentColor' : 'none'" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 cursor-pointer">
+                        <svg @click="savePost()" xmlns="http://www.w3.org/2000/svg" :fill="$store.state.user.saved.includes(post.id) ? 'currentColor' : 'none'" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 cursor-pointer">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" />
                         </svg>
-
                     </div>
                 </div>
 
@@ -79,7 +83,7 @@ export default defineComponent({
     },
     methods: {
         async savePost() {
-            const user = (useState('user').value as User);
+            const user = (this.$store.state.user as User);
             if(user.saved.includes(this.post.id)) {
                 user.saved.splice(user.saved.indexOf(this.post.id), 1);
             } else {
@@ -90,7 +94,7 @@ export default defineComponent({
             })
         },
         async likePost() {
-            const user = useState('user').value as User;
+            const user = this.$store.state.user as User;
             if(this.post.likedBy.includes(user.uid)) {
                 this.post.likedBy.splice(this.post.likedBy.indexOf(user.uid), 1);
             } else {

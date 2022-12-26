@@ -2,7 +2,7 @@
     <div class="page w-full h-screen lg:px-32 lg:py-16 md:px-16 md:py-8">
 
         <!-- Wrapper -->
-        <div v-if="posts" class="flex flex-col gap-4">
+        <div v-if="$store.state.loaded && user" class="flex flex-col gap-4">
 
             <!-- Profile header -->
             <div class="bg-white w-full md:rounded-lg p-6 flex flex-col gap-4">
@@ -31,9 +31,9 @@
                 <div class="flex flex-col w-full gap-4">
                     <!-- Avatar and edit button -->
                     <div class="flex gap-8">
-                        <img :src="useState('user').value.photoURL" alt="Avatar" class="w-20 h-20 md:w-32 md:h-32 rounded-full object-fill">
+                        <img :src="user.photoURL" alt="Avatar" class="w-20 h-20 md:w-32 md:h-32 rounded-full object-fill">
                         <div class="flex flex-col w-full">
-                            <h1 class="h-1/2 flex text-xl md:text-2xl">{{ useState('user').value.displayName }}</h1>
+                            <h1 class="h-1/2 flex text-xl md:text-2xl">{{ user.displayName }}</h1>
                             <NuxtLink to="/user/settings" class="h-1/2 flex items-center justify-center btn bg-sky-500 md:hidden">Edit profile</NuxtLink>
                             <NuxtLink to="/user/settings" class="hidden md:flex py-2 px-3 bg-sky-500 text-stone-100 w-36 rounded-lg justify-around items-center font-semibold text-sm">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
@@ -43,7 +43,7 @@
                             </NuxtLink>
                             <div class="hidden md:flex justify-between items-center w-1/2 self-center">
                                 <div class="flex flex-col items-center w-1/3">
-                                    <p class="font-bold">{{ posts.length }}</p>
+                                    <p class="font-bold" v-if="posts">{{ posts.length }}</p>
                                     <p class="md:text-sm">Posts</p>
                                 </div>
                                 <div class="flex flex-col items-center w-1/3">
@@ -51,7 +51,7 @@
                                     <p class="md:text-sm">Followers</p>
                                 </div>
                                 <div class="flex flex-col items-center w-1/3">
-                                    <p class="font-bold">{{ useState('user').value.following.length }}</p>
+                                    <p class="font-bold" v-if="user.following">{{ user.following.length }}</p>
                                     <p class="md:text-sm">Following</p>
                                 </div>
                             </div>
@@ -59,14 +59,14 @@
                     </div>
                     <!-- Name and bio -->
                     <div class="flex flex-col gap-2 md:w-2/3">
-                        <p>{{ useState('user').value.fullName }}</p>
-                        <span class="w-full text-sm whitespace-pre">{{ useState('user').value.bio }}</span>
+                        <p>{{ user.fullName }}</p>
+                        <span class="w-full text-sm whitespace-pre">{{ user.bio }}</span>
                     </div>
                     <hr class="md:hidden">
                     <!-- Profile stats (mobile view) -->
                     <div class="flex items-center md:hidden">
                         <div class="flex flex-col items-center w-1/3">
-                            <p class="font-bold">{{ posts.length }}</p>
+                            <p class="font-bold" v-if="posts">{{ posts.length }}</p>
                             <p class="md:text-sm">Posts</p>
                         </div>
                         <div class="flex flex-col items-center w-1/3">
@@ -74,7 +74,7 @@
                             <p class="md:text-sm">Followers</p>
                         </div>
                         <div class="flex flex-col items-center w-1/3">
-                            <p class="font-bold">{{ useState('user').value.following.length }}</p>
+                            <p class="font-bold" v-if="user.following">{{ user.following.length }}</p>
                             <p class="md:text-sm">Following</p>
                         </div>
                     </div>
@@ -104,22 +104,42 @@ export default defineComponent({
             firebase,
         }
     },
+    computed: {
+        loaded() {
+            return this.$store.state.loaded;
+        }
+    },
     data() {
         return {
             posts: Array<Post>(),
             followers: 0,
+            user: {} as User
         }
     },
-    async mounted() {
-        const q = query(collection(this.firebase.firestore, "posts"), where("author", "==", this.firebase.auth.currentUser?.uid), orderBy("createdAt", "desc"));
-        const querySnapshot = await getDocs(q);
-        querySnapshot.forEach((doc) => {
-            this.posts.push(doc.data() as Post);
-        })
+    methods: {
+        async syncData() {
+            this.user = this.$store.state.user as User;
 
-        const followersQuery = query(collection(this.firebase.firestore, "users"), where("following", "array-contains", (useState('user').value as User).uid));
-        const followersSnapshot = await getCountFromServer(followersQuery);
-        this.followers = followersSnapshot.data().count;
+            const q = query(collection(this.firebase.firestore, "posts"), where("author", "==", this.user.uid), orderBy("createdAt", "desc"));
+            const querySnapshot = await getDocs(q);
+            querySnapshot.forEach((doc) => {
+                this.posts.push(doc.data() as Post);
+            })
+
+            const followersQuery = query(collection(this.firebase.firestore, "users"), where("following", "array-contains", this.user.uid));
+            const followersSnapshot = await getCountFromServer(followersQuery);
+            this.followers = followersSnapshot.data().count;
+        }
+    },
+    mounted() {
+        if(this.$store.state.user.uid != undefined) this.syncData();
+    },
+    watch: {
+        loaded(oldVal, newVal) {
+            if(oldVal) {
+                this.syncData();
+            }
+        }
     }
 })
 </script>
