@@ -34,8 +34,8 @@ npm run build
 - Change password
 - Notification settings
 ## Images
-![Home page]("./img/home-page.png")
-![Post creation page]("./img/post-creation.png")
-![Post page]("./img/post-page.png")
-![Profile page]("./img/profile-page.png")
-![Settings page]("./img/settings-page.png")
+![Home page](./img/home-page.png)
+![Post creation page](./img/post-creation.png)
+![Post page](./img/post-page.png)
+![Profile page](./img/profile-page.png)
+![Settings page](./img/settings-page.png)
